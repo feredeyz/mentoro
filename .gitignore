@@ -1,2 +1,31 @@
-.venv
-config.py
+# Папки и файлы Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Виртуальные окружения
+venv/
+env/
+.venv/
+.env/
+
+# Дистрибутивы и артефакты сборки
+build/
+dist/
+*.egg-info/
+
+# Конфиденциальные файлы
+*.env
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Логи
+*.log
+
+# Другие временные файлы
+*.tmp
+*.bak
