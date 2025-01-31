@@ -1,14 +1,15 @@
-# Телеграмм-бот
+## ***<p align="center">Qwerty Telegram Bot<p>***
 
-## Описание
-ЭТот проект - телеграмм-бот для нужд класса.  
-## Установка
-1. Если вы на линуксе активируйте мой файл (venv.sh), после чего пропишите pip install -r requirements.txt
-2. Если вы на винде, запустите мой файл (venv.bat), после чего пропишите pip install -r requirements.txt
+## Description
+This project is a telegram bot for school class needs
 
-## Использование
-После установки замените значение переменной TOKEN на свой тг-токен, запустите проект.
+## Installation
+1. ***For Linux:*** Run `venv.sh` and after that run `pip install -r requirements.txt` to install all of the dependencies.
+2. ***For Windows:*** Run `venv.bat` and after that run `pip install -r requirements.txt` to install all of the dependencies.
 
-## Контакты
-afonskiy.vlad@mail.ru,
+## Setup
+After the installation, replace `TOKEN` in `main.py` with yout Telegram Bot Token.
+
+## Contacts
+afonskiy.vlad@mail.ru
 k.dmitriev1@yandex.ru

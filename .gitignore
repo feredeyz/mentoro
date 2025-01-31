@@ -16,6 +16,7 @@ dist/
 
 # Конфиденциальные файлы
 *.env
+bdays.json
 
 # IDE и редакторы
 .vscode/
