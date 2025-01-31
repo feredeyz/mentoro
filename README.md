@@ -1,11 +1,14 @@
-***DEPENDENCIES***
-To install all dependencies, run:
-```
-pip install -r requirements.txt
-```
+# Телеграмм-бот
 
-***RUN***
-To run the bot:
-```
-python main.py
-```
+## Описание
+ЭТот проект - телеграмм-бот для нужд класса.  
+## Установка
+1. Если вы на линуксе активируйте мой файл (venv.sh), после чего пропишите pip install -r requirements.txt
+2. Если вы на винде, запустите мой файл (venv.bat), после чего пропишите pip install -r requirements.txt
+
+## Использование
+После установки замените значение переменной TOKEN на свой тг-токен, запустите проект.
+
+## Контакты
+afonskiy.vlad@mail.ru,
+k.dmitriev1@yandex.ru
