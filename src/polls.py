@@ -1,26 +1,21 @@
+from functions import create_table
+from json import dumps
+
+conn, cur = create_table()
 class Poll:
-    '''
-        Класс для создания опросов.
-        title (str) - заголовок опроса
-        variants (list) - список вариантов для выбора
-        multiple (bool) - можно ли выбирать несколько вариантов ответа
-        voted (list) - список проголосовавших людей
-        results (dict) - результаты опроса ({вариант1: список проголосовавших, вариант2: список проголосовавших})
-    '''
-    
     def __init__(self, variants: list, multiple: bool, title: str):
         self.title: str = title
-        self.variants: list = variants
+        self.variants: dict = self.process_variants(variants)
         self.multiple: bool = multiple
-        self.voted: list = []
-        self.results: dict = {variant: 0 for variant in variants}
+    def process_variants(self, variants):
+        return {variant: [] for variant in variants}
         
     def show_results(self):
         return self.results
     
-    def check_vote(self):
-        pass
-    
     def create_poll(self):
-        pass
-    
+        cur.execute('''
+            INSERT INTO polls (title, variants, multiple)
+            VALUES (%s, %s, %s)
+        ''', (self.title, dumps(self.variants), self.multiple))
+        conn.commit()
