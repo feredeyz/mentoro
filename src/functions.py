@@ -73,6 +73,9 @@ def check_vote(poll_id, variant_idx):
     
 def summ_arrays(*args):
     tmp = []
-    for i in args:
+    for i in args[0]:
         tmp.extend(i)
     return tmp
+
+def get_indexes(arr: list):
+    return [str(i + 1) for i in range(len(arr))]
