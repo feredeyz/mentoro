@@ -21,12 +21,16 @@ def get_bdays():
     with open('../bdays.json', "r") as f:
         return load(f)
     
+def delete_poll_from_db(poll_id):
+    cur.execute('DELETE FROM polls WHERE id=%s', (poll_id))
+    conn.commit()
+    
 def create_table():
     global conn, cur
     conn = sql.connect(
-        dbname="",
-        user="",
-        password="",
+        dbname="qwerty",
+        user="feredeyz",
+        password="qwerty123",
         host="localhost",
         port="5432"
     )
