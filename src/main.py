@@ -10,26 +10,25 @@ from functions import (
     update_votes, 
     summ_arrays, 
     get_indexes,
-    delete_poll_from_db
+    delete_poll_from_db,
+    get_votes_by_user
 )
 from polls import Poll
 import matplotlib.pyplot as plt
 import schedule
 import threading
 import time
-from random import choice
 from datetime import datetime
 
 # --------------------
 # Инициализация бота
 # --------------------
+bot = tb.TeleBot(token=TOKEN)
 
 # --------------------
 #     Переменные
 # --------------------
-
-bot = tb.TeleBot(token=TOKEN)
-ADMINS = [1297911832]
+ADMINS = []
 COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
 
 # --------------------
@@ -154,7 +153,8 @@ def show_all_polls(msg: Message):
         poll_kb = InlineKeyboardMarkup(row_width=2)
         poll_kb.add(
             InlineKeyboardButton('Проголосовать', callback_data=f'vote_id{poll[0]}'),
-            InlineKeyboardButton('Удалить опрос', callback_data=f'delete_poll{poll[0]}')
+            InlineKeyboardButton('Удалить опрос', callback_data=f'delete_poll{poll[0]}'),
+            InlineKeyboardButton('Удалить голос', callback_data=f'delete_vote{poll[0]}'),
         )
         all_voters = len(summ_arrays(list(poll[2].values())))
         caption = f'Голосование: {poll[1]}\n'
@@ -174,12 +174,13 @@ def show_all_polls(msg: Message):
 def show_all_polls(msg: Message):
     polls = get_polls()
     if not polls:
-        bot.send_message(msg.chat.id, 'Пока что нет никаких опросов!')
+        bot.send_message(msg.chat.id, 'Пока что нету никаких опросов!')
         return
     for poll in polls:
         poll_kb = InlineKeyboardMarkup(row_width=2)
         poll_kb.add(
-            InlineKeyboardButton('Проголосовать', callback_data=f'vote_id{poll[0]}')
+            InlineKeyboardButton('Проголосовать', callback_data=f'vote_id{poll[0]}'),
+            InlineKeyboardButton('Удалить голос', callback_data=f'delete_vote{poll[0]}'),
         )
         all_voters = len(summ_arrays(list(poll[2].values())))
         caption = f'Голосование: {poll[1]}\n'
@@ -201,6 +202,30 @@ def delete_poll(call: CallbackQuery):
     delete_poll_from_db(poll_id)
     bot.answer_callback_query(call.id, 'Опрос успешно удалён')
     
+@bot.callback_query_handler(func=lambda call: 'delete_vote' in call.data)
+def get_deleted_vote(call: CallbackQuery):
+    poll_id = call.data[11:]
+    user = call.message.chat.id
+    votes = get_votes_by_user(poll_id, user)
+    if not votes:
+        bot.answer_callback_query(call.id, 'Вы не голосовали.')
+        return
+    caption = 'У вас есть голоса за эти варианты. Напишите номер варианта, чтобы удалить ваш голос за него.\n'
+    for idx, vote in enumerate(votes):
+        caption += f'{idx + 1}. {vote}'
+    bot.send_message(call.message.chat.id, caption)
+    bot.register_next_step_handler(call.message, delete_vote_from_poll, poll_id, user, votes, call)
+    
+def delete_vote_from_poll(msg: Message, poll_id, user, votes, call):
+    vote = msg.text
+    if not vote.isdigit() or vote not in get_indexes(votes):
+        bot.answer_callback_query(call.id, "Вы неправильно указали номер варианта.")
+        return
+    variants = get_poll_variants(poll_id)
+    variant = votes[int(vote) - 1]
+    variants[variant].remove(user)
+    update_votes(poll_id, variants)
+    bot.answer_callback_query(call.id, 'Вы успешно удалили свой голос.')
 
 @bot.callback_query_handler(func=lambda call: 'vote_id' in call.data)
 def vote_for_poll(call: CallbackQuery):
@@ -225,7 +250,7 @@ def process_vote(msg, variants, poll_id, call):
             for idx, variant in enumerate(variants.items()):
                 if vote == str(idx + 1) and voter not in variant[1]:
                     poll[2][key].append(voter)
-                    update_votes(poll)
+                    update_votes(poll[0], poll[2])
                     bot.answer_callback_query(call.id, "Вы успешно проголосовали!")
             if tmp == poll:
                 bot.answer_callback_query(call.id, 'Вы уже голосовали за этот вариант.')
@@ -235,7 +260,7 @@ def process_vote(msg, variants, poll_id, call):
                 bot.answer_callback_query(call.id, "Вы уже голосовали.")
             else:
                 poll[2][key].append(voter)
-                update_votes(poll)
+                update_votes(poll[0], poll[2])
                 bot.answer_callback_query(call.id, "Вы успешно проголосовали!")
 
 @bot.message_handler(func=lambda msg: msg.text == "Создать опрос" and msg.chat.id in ADMINS)

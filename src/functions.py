@@ -24,13 +24,18 @@ def get_bdays():
 def delete_poll_from_db(poll_id):
     cur.execute('DELETE FROM polls WHERE id=%s', (poll_id))
     conn.commit()
-    
+
+def get_votes_by_user(poll_id, user):
+    cur.execute('SELECT variants FROM polls WHERE id=%s', (poll_id))
+    variants = cur.fetchone()[0]
+    voted_variants = [u[0] for u in variants.items() if user in u[1]]
+    return voted_variants
 def create_table():
     global conn, cur
     conn = sql.connect(
-        dbname="qwerty",
-        user="feredeyz",
-        password="qwerty123",
+        dbname="",
+        user="",
+        password="",
         host="localhost",
         port="5432"
     )
@@ -55,8 +60,8 @@ def get_poll(poll_id):
     cur.execute('SELECT * FROM polls WHERE id=%s', (poll_id))
     return cur.fetchone()
 
-def update_votes(poll):
-    cur.execute('UPDATE polls SET variants = %s WHERE id=%s', (dumps(poll[2]), poll[0]))
+def update_votes(poll_id, variants):
+    cur.execute('UPDATE polls SET variants = %s WHERE id=%s', (dumps(variants), poll_id))
     conn.commit()
 
 def get_poll_variants(poll_id):
