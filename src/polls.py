@@ -7,6 +7,7 @@ class Poll:
         self.title: str = title
         self.variants: dict = self.process_variants(variants)
         self.multiple: bool = multiple
+    
     def process_variants(self, variants):
         return {variant: [] for variant in variants}
         

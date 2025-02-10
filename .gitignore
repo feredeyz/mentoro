@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *.pyo
-config.py
+config_dev.py
 
 # Виртуальные окружения
 venv/
@@ -17,7 +17,8 @@ dist/
 
 # Конфиденциальные файлы
 *.env
-bdays.json
+poll.jpeg
+ids.txt
 
 # IDE и редакторы
 .vscode/

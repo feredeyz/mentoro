@@ -36,8 +36,8 @@ def create_table():
         dbname="",
         user="",
         password="",
-        host="localhost",
-        port="5432"
+        host="",
+        port=""
     )
     
     cur = conn.cursor()

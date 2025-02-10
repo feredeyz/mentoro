@@ -8,8 +8,13 @@ This project is a telegram bot for school class needs
 2. ***For Windows:*** Run `venv.bat` and after that run `pip install -r requirements.txt` to install all of the dependencies.
 
 ## Setup
-After the installation, replace `TOKEN` in `main.py` with yout Telegram Bot Token and change the PostgreSQL connection's parameters in `functions.py`.
-To integrate Birthdays functional, create `bdays.json` file with data about peoples' birthdays in format `name: date`.
+After the installation, replace `TOKEN` in `config.py` with your Telegram Bot Token and change the PostgreSQL connection's parameters in `create_table` function in `functions.py`.
+Then, add data with birthdays to `bdays.json`. For instance:
+```
+{
+    "Artemiy": "11.11.1111"
+}
+```
 
 ## Contacts
 afonskiy.vlad@mail.ru
