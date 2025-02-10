@@ -2,6 +2,27 @@ from datetime import datetime
 from json import load, dumps
 import psycopg2 as sql
 
+def create_table():
+    global conn, cur
+    conn = sql.connect(
+        dbname="",
+        user="",
+        password="",
+        host="",
+        port=""
+    )
+    
+    cur = conn.cursor()
+    cur.execute('''
+    CREATE TABLE IF NOT EXISTS polls (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    variants JSON NOT NULL,
+    multiple BOOLEAN NOT NULL);
+''')
+    conn.commit()
+    
+    return conn, cur
 
 def get_nearest_birthday(data):
     today = datetime.today().date()
@@ -30,27 +51,8 @@ def get_votes_by_user(poll_id, user):
     variants = cur.fetchone()[0]
     voted_variants = [u[0] for u in variants.items() if user in u[1]]
     return voted_variants
-def create_table():
-    global conn, cur
-    conn = sql.connect(
-        dbname="",
-        user="",
-        password="",
-        host="",
-        port=""
-    )
-    
-    cur = conn.cursor()
-    cur.execute('''
-    CREATE TABLE IF NOT EXISTS polls (
-    id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL,
-    variants JSON NOT NULL,
-    multiple BOOLEAN NOT NULL);
-''')
-    conn.commit()
-    
-    return conn, cur
+
+
 
 def get_polls():
     cur.execute('SELECT * FROM polls')

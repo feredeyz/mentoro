@@ -7,11 +7,12 @@ from functions import (
     get_polls, 
     get_poll_variants, 
     get_poll, 
-    update_votes, 
+    update_votes,
     summ_arrays, 
     get_indexes,
     delete_poll_from_db,
-    get_votes_by_user
+    get_votes_by_user,
+    create_table
 )
 from polls import Poll
 import matplotlib.pyplot as plt
@@ -24,6 +25,7 @@ from datetime import datetime
 # Инициализация бота
 # --------------------
 bot = tb.TeleBot(token=TOKEN)
+create_table()
 
 # --------------------
 #     Переменные
